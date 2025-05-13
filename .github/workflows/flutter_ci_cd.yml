@@ -1,0 +1,85 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on push to any branch
+
+jobs:
+  build:
+    name: Build Flutter App (Linux/Windows/Web/Android)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [web, linux, windows, android]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build for ${{ matrix.platform }}
+        run: |
+          if [[ "${{ matrix.platform }}" == "web" ]]; then
+            flutter build web
+          elif [[ "${{ matrix.platform }}" == "linux" ]]; then
+            flutter build linux
+          elif [[ "${{ matrix.platform }}" == "windows" ]]; then
+            flutter build windows
+          elif [[ "${{ matrix.platform }}" == "android" ]]; then
+            flutter build apk --release
+          fi
+
+      - name: Upload build artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.platform }}
+          path: |
+            build/web/**/*
+            build/linux/**/*
+            build/windows/**/*
+            build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: ignore
+
+  ios_mac_build:
+    name: Build for iOS & macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build macOS
+        run: flutter build macos
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-macos
+          path: build/macos/Build/Products/Release/**
+
+      - name: Build iOS (no code signing)
+        run: flutter build ios --no-codesign
+
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-ios
+          path: build/ios/iphoneos/**  # Or change path depending on output structure
