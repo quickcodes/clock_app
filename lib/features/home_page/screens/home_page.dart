@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flip_board/flip_widget.dart';
 import 'package:clock_app/core/utils.dart';
@@ -127,7 +128,8 @@ class _HomePageState extends State<HomePage>
             dayNightButton,
             DeviceInfoWidget(),
             BatteryStatusWidget(),
-            if (showClockBg) colorSwitcherButton,
+            // if (showClockBg)
+            colorSwitcherButton,
           ],
         ),
 
@@ -139,52 +141,58 @@ class _HomePageState extends State<HomePage>
             dayNightButton,
             BatteryStatusWidget(),
             DeviceInfoWidget(),
-            if (showClockBg) colorSwitcherButton,
+            // if (showClockBg)
+            colorSwitcherButton,
           ],
         ),
     ];
 
     // Main scaffold and UI layout
-    return Stack(
-      children: [
-        AnimatedContainer(
-          duration: animationDuration,
-          curve: animationCurve,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/sky.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: AnimatedContainer(
+    return GestureDetector(
+      onTap: () {
+        if (!mounted) return;
+        setState(() {
+          if (showMenu) {
+            showMenu = false;
+            return;
+          }
+          if (universalScale >= 2.2) {
+            universalScale = 1;
+          } else {
+            universalScale = universalScale + 0.2;
+          }
+          showMenu = false;
+        });
+      },
+      onLongPress: () {
+        if (!mounted) return;
+        setState(() {
+          showMenu = true;
+        });
+      },
+      child: Stack(
+        children: [
+          AnimatedContainer(
             duration: animationDuration,
             curve: animationCurve,
-            color: darkMode ? Colors.black : Colors.transparent,
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: AnimatedScale(
-                duration: animationDuration,
-                curve: animationCurve,
-                scale: universalScale,
-                filterQuality: FilterQuality.high,
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: () {
-                    if (!mounted) return;
-                    setState(() {
-                      if (universalScale >= 2.2) {
-                        universalScale = 1;
-                      } else {
-                        universalScale = universalScale + 0.2;
-                      }
-                    });
-                  },
-                  onLongPress: () {
-                    if (!mounted) return;
-                    setState(() {
-                      showMenu = true;
-                    });
-                  },
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/sky.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: AnimatedContainer(
+              duration: animationDuration,
+              curve: animationCurve,
+              color: darkMode ? Colors.black : Colors.transparent,
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: AnimatedScale(
+                  duration: animationDuration,
+                  curve: animationCurve,
+                  scale: universalScale,
+                  filterQuality: FilterQuality.high,
+                  alignment: Alignment.center,
                   child: Center(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
@@ -208,263 +216,272 @@ class _HomePageState extends State<HomePage>
               ),
             ),
           ),
-        ),
-        if (showMenu)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade900,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: SafeArea(
-                  top: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Container(
-                      //   width: 40,
-                      //   height: 4,
-                      //   margin: EdgeInsets.only(bottom: sizeByHeight(0.01)),
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.grey,
-                      //     borderRadius: BorderRadius.circular(2),
-                      //   ),
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text("Settings",
+          if (showMenu)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade900,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Container(
+                        //   width: 40,
+                        //   height: 4,
+                        //   margin: EdgeInsets.only(bottom: sizeByHeight(0.01)),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.grey,
+                        //     borderRadius: BorderRadius.circular(2),
+                        //   ),
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text("Settings",
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: sizeByHeight(0.025),
+                                  )),
+                            ),
+                            SizedBox(
+                              width: sizeByHeight(0.055),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: sizeByHeight(0.025),
+                                ),
+                                onPressed: () {
+                                  if (!mounted) return;
+                                  setState(() => showMenu = false);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Dark Mode",
                                 maxLines: 3,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: sizeByHeight(0.025),
-                                )),
-                          ),
-                          SizedBox(
-                            width: sizeByHeight(0.055),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.white,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: sizeByHeight(0.055),
+                              child: CustomSwitch(
+                                value: darkMode,
+                                onChanged: (value) {
+                                  setState(() {
+                                    darkMode = value;
+                                  });
+                                },
                                 size: sizeByHeight(0.025),
-                              ),
-                              onPressed: () {
-                                if (!mounted) return;
-                                setState(() => showMenu = false);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Dark Mode",
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.025),
-                                color: Colors.grey,
+                                activeColor: Colors.blue,
+                                inactiveColor: Colors.grey,
+                                thumbColor: Colors.white,
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: sizeByHeight(0.055),
-                            child: CustomSwitch(
-                              value: darkMode,
-                              onChanged: (value) {
-                                setState(() {
-                                  darkMode = value;
-                                });
-                              },
-                              size: sizeByHeight(0.025),
-                              activeColor: Colors.blue,
-                              inactiveColor: Colors.grey,
-                              thumbColor: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Other Options",
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.025),
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: sizeByHeight(0.055),
-                            child: CustomSwitch(
-                              value: showOtherOptions,
-                              onChanged: (value) =>
-                                  setState(() => showOtherOptions = value),
-                              size: sizeByHeight(0.025),
-                              activeColor: Colors.blue,
-                              inactiveColor: Colors.grey,
-                              thumbColor: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Clock Background",
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.025),
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: sizeByHeight(0.055),
-                            child: CustomSwitch(
-                              value: showClockBg,
-                              onChanged: (value) =>
-                                  setState(() => showClockBg = value),
-                              size: sizeByHeight(0.025),
-                              activeColor: Colors.blue,
-                              inactiveColor: Colors.grey,
-                              thumbColor: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "AM/PM + Seconds",
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.025),
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: sizeByHeight(0.055),
-                            child: CustomSwitch(
-                              value: showAmPmSec,
-                              onChanged: (value) =>
-                                  setState(() => showAmPmSec = value),
-                              size: sizeByHeight(0.025),
-                              activeColor: Colors.blue,
-                              inactiveColor: Colors.grey,
-                              thumbColor: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Font Weight",
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.025),
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: sizeByHeight(0.025),
-                            child: DropdownButton<FontWeight>(
-                              value: userSelectedFontWeight,
-                              underline: SizedBox(),
-                              icon: Icon(Icons.arrow_drop_down,
-                                  color: Colors.grey),
-                              dropdownColor: Colors.grey,
-                              style: TextStyle(
-                                fontSize: sizeByHeight(0.02),
-                                color: Colors.white,
-                              ),
-                              items: [
-                                DropdownMenuItem(
-                                  value: FontWeight.w100,
-                                  child: Text(
-                                    'Thin',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w100),
-                                  ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Other Options",
+                                maxLines: 3,
+                                style: TextStyle(
+                                  fontSize: sizeByHeight(0.025),
+                                  color: Colors.grey,
                                 ),
-                                DropdownMenuItem(
-                                  value: FontWeight.w300,
-                                  child: Text(
-                                    'Light',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: FontWeight.normal,
-                                  child: Text(
-                                    'Normal',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: FontWeight.w500,
-                                  child: Text(
-                                    'Medium',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: FontWeight.bold,
-                                  child: Text(
-                                    'Bold',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: FontWeight.w900,
-                                  child: Text(
-                                    'Extra Bold',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w900),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (FontWeight? newValue) {
-                                setState(() {
-                                  userSelectedFontWeight = newValue!;
-                                });
-                              },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            SizedBox(
+                              width: sizeByHeight(0.055),
+                              child: CustomSwitch(
+                                value: showOtherOptions,
+                                onChanged: (value) =>
+                                    setState(() => showOtherOptions = value),
+                                size: sizeByHeight(0.025),
+                                activeColor: Colors.blue,
+                                inactiveColor: Colors.grey,
+                                thumbColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Clock Background",
+                                maxLines: 3,
+                                style: TextStyle(
+                                  fontSize: sizeByHeight(0.025),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: sizeByHeight(0.055),
+                              child: CustomSwitch(
+                                value: showClockBg,
+                                onChanged: (value) =>
+                                    setState(() => showClockBg = value),
+                                size: sizeByHeight(0.025),
+                                activeColor: Colors.blue,
+                                inactiveColor: Colors.grey,
+                                thumbColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "AM/PM + Seconds",
+                                maxLines: 3,
+                                style: TextStyle(
+                                  fontSize: sizeByHeight(0.025),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: sizeByHeight(0.055),
+                              child: CustomSwitch(
+                                value: showAmPmSec,
+                                onChanged: (value) =>
+                                    setState(() => showAmPmSec = value),
+                                size: sizeByHeight(0.025),
+                                activeColor: Colors.blue,
+                                inactiveColor: Colors.grey,
+                                thumbColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Font Weight",
+                                maxLines: 3,
+                                style: TextStyle(
+                                  fontSize: sizeByHeight(0.025),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: sizeByHeight(0.025),
+                              child: DropdownButton<FontWeight>(
+                                value: userSelectedFontWeight,
+                                underline: SizedBox(),
+                                icon: Icon(Icons.arrow_drop_down,
+                                    color: Colors.grey),
+                                dropdownColor: Colors.grey,
+                                style: TextStyle(
+                                  fontSize: sizeByHeight(0.02),
+                                  color: Colors.white,
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                    value: FontWeight.w100,
+                                    child: Text(
+                                      'Extra Thin',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w100),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.w200,
+                                    child: Text(
+                                      'Thin',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w100),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.w300,
+                                    child: Text(
+                                      'Light',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.normal,
+                                    child: Text(
+                                      'Normal',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.w500,
+                                    child: Text(
+                                      'Medium',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.bold,
+                                    child: Text(
+                                      'Bold',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: FontWeight.w900,
+                                    child: Text(
+                                      'Extra Bold',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (FontWeight? newValue) {
+                                  setState(() {
+                                    userSelectedFontWeight = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

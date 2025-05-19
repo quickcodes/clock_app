@@ -51,23 +51,34 @@ extension _HomePageWidgetFunExt on _HomePageState {
     final separatorTextHeightBasedSize = sizeByHeight(0.08);
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
-      child: AnimatedDefaultTextStyle(
-        curve: Curves.linear,
-        duration: Duration(milliseconds: 300), //animationDuration,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: max(separatorTextHeightBasedSize, dynamicWidth * 0.25),
-          fontWeight: userSelectedFontWeight,
-          color: Colors.white,
-          height: 1,
-        ),
-        child: Text(
-          ":",
-          // style: TextStyle(
-          //   fontSize: max(separatorTextHeightBasedSize, dynamicWidth * 0.25),
-          //   color: Colors.white,
-          //   fontWeight: FontWeight.bold,
-          // ),
+      child: ShaderMask(
+        shaderCallback: (bounds) {
+          return LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: showClockBg
+                ? [Colors.white, Colors.white, Colors.white]
+                : clockColorShades[selectedClockShadeIndex],
+          ).createShader(bounds);
+        },
+        child: AnimatedDefaultTextStyle(
+          curve: Curves.linear,
+          duration: Duration(milliseconds: 300), //animationDuration,
+          textAlign: TextAlign.center,
+          style: defaultTextStyle.copyWith(
+            fontSize: max(separatorTextHeightBasedSize, dynamicWidth * 0.25),
+            fontWeight: userSelectedFontWeight,
+            color: Colors.white,
+            height: 1,
+          ),
+          child: Text(
+            ":",
+            // style: TextStyle(
+            //   fontSize: max(separatorTextHeightBasedSize, dynamicWidth * 0.25),
+            //   color: Colors.white,
+            //   fontWeight: FontWeight.bold,
+            // ),
+          ),
         ),
       ),
     );
@@ -161,24 +172,43 @@ extension _HomePageWidgetFunExt on _HomePageState {
       ),
       // width: bigText ? sizeByHeight(0.12) : sizeByHeight(0.06),
       // height: bigText ? sizeByHeight(0.17) : sizeByHeight(0.07),
-      child: AnimatedDefaultTextStyle(
-        curve: Curves.linear,
-        duration: Duration(milliseconds: 300), //animationDuration,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: isDate
-              ? min(isDateHeightBaseSize, dynamicWidth * 0.1)
-              : bigText
-                  ? min(bigTextHeightBasedSize, dynamicWidth * 0.3)
-                  : min(smallTextHeightBasedSize, dynamicWidth * 0.2),
-          fontWeight: userSelectedFontWeight,
-          color: Colors.white,
-          height: 1,
-        ),
-        child: Text(
-          text,
+      child: ShaderMask(
+        shaderCallback: (bounds) {
+          return LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: showClockBg
+                ? [Colors.white, Colors.white, Colors.white]
+                : clockColorShades[selectedClockShadeIndex],
+          ).createShader(bounds);
+        },
+        child: AnimatedDefaultTextStyle(
+          curve: Curves.linear,
+          duration: Duration(milliseconds: 300), //animationDuration,
+          textAlign: TextAlign.center,
+          style: defaultTextStyle.copyWith(
+            fontSize: isDate
+                ? min(isDateHeightBaseSize, dynamicWidth * 0.08)
+                : bigText
+                    ? min(bigTextHeightBasedSize, dynamicWidth * 0.3)
+                    : min(smallTextHeightBasedSize, dynamicWidth * 0.2),
+            fontWeight: userSelectedFontWeight,
+            color: Colors.white,
+            // foreground: Paint()
+            //   ..shader = LinearGradient(
+            //     colors: clockColorShades[selectedClockShadeIndex],
+            //   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+            height: 1,
+          ),
+          child: Text(
+            text,
+          ),
         ),
       ),
     );
   }
 }
+
+//  backgroundGradientColors:
+//                     clockColorShades[selectedClockShadeIndex],
+//                 stops: clockColorShadesStops[selectedClockShadeIndex],
