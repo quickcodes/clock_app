@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Always-On Minimal Clock - Flutter Project</title>
-</head>
+
 <body>
 
   <h1>🕒 Always-On Minimal Clock – Flutter Project</h1>
